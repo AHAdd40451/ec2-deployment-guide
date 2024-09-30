@@ -70,6 +70,33 @@ Add the following to the location part of the server block
     }
 ```
 ```
+```
+
+## For Both frontend and backend
+```
+
+server {
+    listen 80; # Port 80 for HTTP
+    
+    server_name your_domain_or_ip;  # Replace with your domain or public IP
+
+    location / {
+        proxy_pass http://localhost:3000;  # Proxy to frontend
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /api/ {
+        proxy_pass http://localhost:6000;  # Proxy to backend
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
 # Check NGINX config
 sudo nginx -t
 
